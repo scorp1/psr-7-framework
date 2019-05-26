@@ -5,7 +5,8 @@
   "require": {
     "php": ">=7.1.0",
     "roave/security-advisories": "dev-master",
-    "zendframework/zend-diactoros": "^2.1"
+    "zendframework/zend-diactoros": "^2.1",
+    "zendframework/zend-cache": "^2.8"
   },
   "autoload": {
     "psr-4": {
