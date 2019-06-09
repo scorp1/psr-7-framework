@@ -10,7 +10,6 @@ use Framework\Cache\CacheAdapter;
 use Framework\Counting\Counting;
 use Zend\Diactoros\Response\JsonResponse;
 use Framework\Import\ImportShops;
-use Zend\Cache\Psr\CacheItemPool\CacheItemPoolDecorator;
 use Framework\Http\Router\RouterCollection;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -69,6 +68,8 @@ try{
     foreach ($result->getAttributes() as $attribute => $value){
         $request = $request->withAttribute($attribute, $value);
     }
+    ### Actions
+
     //возвращает анонимную функцию которая привязана к этому маршруту
     $action = $result->getHandler();
     //запускаем нашу анонимную функцию с примешиными к ней атрибутами
@@ -78,36 +79,7 @@ try{
 } catch (RequestNotMatchedException $e) {
     $response = new JsonResponse(['error' => 'Unidefined page'], 404);
 }
-/*
-### Actions
 
-$name = isset($request->getQueryParams()['name']) && !empty($request->getQueryParams()['name']) ? $request->getQueryParams()['name'] : 'GUEST';
-$cacheId = $name;
-
-$length = $request->getQueryParams()['length'];
-$height = $request->getQueryParams()['height'];
-$type = isset($request->getQueryParams()['type']) && !empty($request->getQueryParams()['type']) ? $request->getQueryParams()['type'] : 0.5;
-
-$resultRoll = new \Framework\Counting\Counting($height, $length, $type);
-//$tmp = phpversion();
-//var_dump($tmp);
-//die();
-$cached = new CacheAdapter($cfg['filesystem']);
-$cached->save($name, $cacheId);
-
-$storage = \Zend\Cache\StorageFactory::factory([
-    'adapter' => [
-        'name'    => 'apc',
-        'options' => [],
-    ],
-]);
-$pool = new CacheItemPoolDecorator($storage);
-
-
-if($cached->test($cacheId)) {
-  $name = $cached->load($cacheId);
-}
-*/
 ### PostProcessing
 
 $response = $response
@@ -115,8 +87,5 @@ $response = $response
 
 ### Sending
 
-
-
 $emitter = new ResponseSender();
 $emitter->send($response);
-
